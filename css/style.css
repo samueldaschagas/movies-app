@@ -1,0 +1,26 @@
+body {
+	background-color: #eee;
+}
+
+nav {
+	background-color: #34495e;
+}
+
+.brand-logo {
+	font-size: 20px !important;
+}
+
+.input-field .search-icon {
+	font-size: 30px;
+	position: relative;
+	top: -60px;
+	cursor: pointer;
+}
+
+.main-container {
+	background-color: #fff;
+	/* margin-top: 20px; */
+	margin: 20px auto;
+	padding: 50px;
+	min-height: 80%;
+}

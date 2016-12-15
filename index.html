@@ -1,0 +1,143 @@
+<html lang="en" >
+<head>
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <!-- Angular Material style sheet -->
+    <!-- Compiled and minified CSS -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/materialize/0.97.8/css/materialize.min.css">
+  <link rel="stylesheet" href="css/style.css">
+  <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+</head>
+
+ <!-- Compiled and minified JavaScript -->
+  <script type="text/javascript" src="https://code.jquery.com/jquery-2.1.1.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/0.97.8/js/materialize.min.js"></script>
+
+<body ng-app="BlankApp" ng-cloak>
+  <!--
+    Your HTML content here
+  -->  
+  <section ng-controller="DemoCtrl" ng-cloak>
+   <nav>
+    <div class="nav-wrapper container">
+      <a href="#" class="brand-logo">MoviesApp</a>
+    <!--   <ul id="nav-mobile" class="right hide-on-med-and-down">
+        <li><a href="sass.html">Sass</a></li>
+        <li><a href="badges.html">Components</a></li>
+        <li><a href="collapsible.html">JavaScript</a></li>
+      </ul> -->
+    </div>
+  </nav>
+
+  <div class="container main-container card">
+      <div class="row">
+        <br>
+        <div class="input-field col s12">
+          <input ng-model="movieName" placeholder="Digite o nome de um filme" id="first_name" type="text" class="validate" 
+            ng-keypress="searchKeyPress($event)" autofocus>
+          <label for="first_name">Pesquisa</label>
+          <i class="material-icons right search-icon" ng-click="pesquisarFilme()">search</i>
+        </div>
+      </div>
+
+      <div class="row">
+         <div class="col s6" ng-show="currentMovie.Response == 'True' && !carregando">
+            <div>Filme encontrado</div>
+            <div class="card-panel grey lighten-5 z-depth-1">
+              <div class="row">
+                <div class="col s2">
+                  <img ng-src="{{currentMovie.Poster}}" alt="" class="responsive-img">
+                </div>
+                <div class="col s10">
+                  <div class="black-text">
+                    <h5>{{currentMovie.Title}}</h5>
+                    <div>{{currentMovie.Plot}}</div>
+                    <div>{{currentMovie.imdbRating}}</div>
+                    <br>
+                    <a class="waves-effect waves-light btn right" ng-click="adicionarFilme()"><i class="material-icons left">add</i>Adicionar filme</a>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div class="col s6" ng-show="currentMovie.Response == 'False'">
+              <div>Filme não encontrado</div>
+          </div>
+
+          <div class="col s6" ng-show="!carregando">
+              <div>Lista de filmes</div>
+              <div ng-repeat="filme in listaDeFilmes track by $index" ng-if="$index < 6" class="col s3">
+                <div class="card-panel grey lighten-5 z-depth-1">
+                  <div class="row">
+                    <div class="col s12">
+                      <div class="black-text">
+                        <img ng-if="filme.Poster != 'N/A'" ng-src="{{filme.Poster}}" alt="" class="responsive-img">
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+          </div>
+          
+          <div class="center-align" ng-show="carregando">
+             <div class="preloader-wrapper big active">
+            <div class="spinner-layer spinner-blue-only">
+              <div class="circle-clipper left">
+                <div class="circle"></div>
+              </div><div class="gap-patch">
+                <div class="circle"></div>
+              </div><div class="circle-clipper right">
+                <div class="circle"></div>
+              </div>
+            </div>
+          </div>
+          </div>
+      </div>
+
+  </section>
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/angular.js/1.6.0/angular.min.js"></script>
+  
+  <!-- Your application bootstrap  -->
+  <script type="text/javascript">    
+    /**
+     * You must include the dependency on 'ngMaterial' 
+     */
+
+    angular.module('BlankApp',[])
+      .controller('DemoCtrl', DemoCtrl);
+
+      function DemoCtrl($scope, $http){
+          $scope.listaDeFilmes = [];
+          
+          $scope.pesquisarFilme = function(){
+              $scope.carregando = true;
+             
+              $http.get('http://www.omdbapi.com/?t=' + $scope.movieName + '&y=&plot=short&r=json')
+              .then(function(response){
+                  $scope.currentMovie = response.data;
+                  $scope.carregando = false;
+              });
+          };
+
+          $scope.adicionarFilme = function(){
+              $scope.listaDeFilmes.push($scope.currentMovie);
+              $scope.movieName = null;
+          };
+
+           $scope.searchKeyPress = function(keyEvent){
+              if (keyEvent.which === 13) {
+                  $scope.pesquisarFilme();
+              }
+          };
+      }
+
+  </script>
+  
+</body>
+</html>
+
+<!--
+Copyright 2016 Google Inc. All Rights Reserved. 
+Use of this source code is governed by an MIT-style license that can be in foundin the LICENSE file at http://material.angularjs.org/license.
+-->
